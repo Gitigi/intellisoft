@@ -1,35 +1,57 @@
+import { useForm } from "react-hook-form";
+
 export default function Register() {
+  const { register, handleSubmit, formState: {errors, isSubmitted}, reset } = useForm();
+  const onSubmit = data => console.log(data);
+
   return <div className="flex justify-center mt-6">
-    <form className="w-1/3 shadow-[0_5px_15px_0_hsla(0,0%,0%,0.15)] p-6 rounded-lg">
+    <form className="mx:2 lg:mx-auto lg:w-1/3 shadow-[0_5px_15px_0_hsla(0,0%,0%,0.15)] p-6 rounded-lg"
+      onSubmit={handleSubmit(onSubmit)}>
       <h2 className="bg-blue-200/70 border rounded-lg p-2 text-center mb-8 font-semibold">Registration Page</h2>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-2">
         <label>First Name</label>
-        <input className="col-span-2 border rounded-lg focus-within:none focus-within:outline-none p-2" type="text" />
+        <div className="col-span-2">
+          <input className="border rounded-lg focus-within:none focus-within:outline-none p-2"
+            type="text"
+            name="firstname"
+            {...register("firstname", {required: true})}
+            />
+          { isSubmitted && errors.firstname ? <p className="text-red-800 font-medium">{errors.firstname.type}</p> : <p>&nbsp;</p> }
+        </div>
 
         <label>Last Name</label>
-        <input className="col-span-2 border rounded-lg focus-within:none focus-within:outline-none p-2" type="text" />
+        <div className="col-span-2">
+          <input className="border rounded-lg focus-within:none focus-within:outline-none p-2"
+            type="text"
+            {...register("lastname", {required: true})}
+            />
+          { isSubmitted && errors.lastname ? <p className="text-red-800 font-medium">{errors.lastname.type}</p> : <p>&nbsp;</p> }
+        </div>
 
         <label>DOB</label>
-        <input className="col-span-2 border rounded-lg focus-within:none focus-within:outline-none p-2" type="date" />
+        <div className="col-span-2 ">
+          <input className="border rounded-lg focus-within:none focus-within:outline-none p-2 w-full"
+            type="date"
+            {...register("dob", {required: true})}
+            />
+          { isSubmitted && errors.dob ? <p className="text-red-800 font-medium">{errors.dob.type}</p> : <p>&nbsp;</p> }
+        </div>
 
         <label>Gender</label>
-        <select className="col-span-2 p-2 bg-white border rounded-lg">
-          <option value="M">Male</option>
-          <option value="F">Female</option>
-        </select>
+        <div className="col-span-2 ">
+          <select className="p-2 bg-white border rounded-lg w-full"
+            {...register("gender", {required: true})}>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+          { isSubmitted && errors.gender ? <p className="text-red-800 font-medium">{errors.gender.type}</p> : <p>&nbsp;</p> }
+        </div>
 
-        <button className="mt-8 border border-green-600 bg-green-300/70 p-2 rounded-lg">
+        <button className="mt-8 border border-green-600 bg-green-300/70 p-2 rounded-lg" onClick={()=>reset()}>
           Clear
         </button>
-        <button className="mt-8 border border-green-600 bg-green-300/70 p-2 rounded-lg col-start-3 col-end-3">
-          Save
-        </button>
+        <input type="submit" value="Save" className="cursor-pointer mt-8 border border-green-600 bg-green-300/70 p-2 rounded-lg col-start-3 col-end-3" />
       </div>
-
-      <div>
-
-      </div>
-
     </form>
   </div>
 }

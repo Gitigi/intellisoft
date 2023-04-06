@@ -15,7 +15,7 @@ function App() {
   return (
     <div className='container mx-auto'>
       <h2 className='text-3xl text-slate-700 shadow-md py-2 font-bold px-4'>Intellisoft Kenya</h2>
-      <div className='mx-24 flex flex-col gap-2'>
+      <div className='lg:mx-24 flex flex-col gap-2'>
         
         <Routes>
           <Route path="/" element={<Layout />}>
