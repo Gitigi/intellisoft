@@ -46,6 +46,7 @@ def patients(patient: schemas.PatientCreate, db: Session = Depends(get_db)):
 def patients(id:int, patient: schemas.PatientUpdate, db: Session = Depends(get_db)):
     update_data = patient.dict(exclude_unset=True)
     r = db.query(models.Patient).where(models.Patient.id == id).update(update_data)
+    db.commit()
     return db.query(models.Patient).where(models.Patient.id == id).first()
 
 @app.delete("/patients/{id}")
@@ -55,8 +56,11 @@ def patient(id: int, db: Session = Depends(get_db)):
     return {"success": True}
 
 @app.get("/visits", response_model=list[schemas.Visit])
-def patients(db: Session = Depends(get_db)):
-    return db.query(models.Visit).all()
+def patients(date: str | None = None, db: Session = Depends(get_db)):
+    query = db.query(models.Visit)
+    if date:
+        query = query.where(models.Visit.visit_date == date)
+    return query.order_by(models.Visit.visit_date.desc()).all()
 
 @app.get("/visits/{id}", response_model=schemas.Visit)
 def patients(id: int, db: Session = Depends(get_db)):
@@ -82,6 +86,7 @@ def patients(visit: schemas.VisitCreate, db: Session = Depends(get_db)):
 def visit(id:int, visit: schemas.VisitUpdate, db: Session = Depends(get_db)):
     update_data = visit.dict(exclude_unset=True)
     r = db.query(models.Visit).where(models.Visit.id == id).update(update_data)
+    db.commit()
     return db.query(models.Visit).where(models.Visit.id == id).first()
 
 @app.delete("/visits/{id}")

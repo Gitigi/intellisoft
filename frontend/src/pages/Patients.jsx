@@ -1,14 +1,23 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import {
+  useQuery
+} from 'react-query'
 
-const patients = [
-  {name: 'John Doe', age: 24, last_visited: '20/03/2023'},
-  {name: 'Eric Dubay', age: 24, last_visited: '20/03/2023'},
-  {name: 'Paul Doe', age: 24, last_visited: '20/03/2023'},
-  {name: 'Ester Doe', age: 24, last_visited: '20/03/2023'},
-  {name: 'James Doe', age: 24, last_visited: '20/03/2023'},
-]
+async function getPatients() {
+  const res = await fetch(`${import.meta.env.VITE_API}/patients`)
+  return await res.json()
+}
 
 export default function Patients() {
+  const navigate = useNavigate()
+  const query = useQuery('patients', getPatients)
+  const patients = query?.data || []
+
+  const gotoVisits = (e) => {
+    const patientId = e.currentTarget.getAttribute('data-id')
+    navigate(`/patients/${patientId}/visits`)
+  }
+  
   return <div className="contents">
     <div className='flex justify-between'>
       <Link to="/register" className='py-2 px-4 border rounded-lg bg-green-100 text-green-800 font-semibold'>Register</Link>
@@ -18,16 +27,16 @@ export default function Patients() {
       <table className='w-full table-fixed px-2 rounded-lg border-collapse'>
         <thead className='bg-green-300'>
           <tr className='text-left rounded-lg'>
-            <th className='py-3 px-2 text-white border border-slate-300 rounded-lg'>Name</th>
+            <th className='py-3 px-2 text-white border border-slate-300 rounded-lg'>First Name</th>
+            <th className='py-3 px-2 text-white border border-slate-300'>Last Name</th>
             <th className='py-3 px-2 text-white border border-slate-300'>Age</th>
-            <th className='py-3 px-2 text-white border border-slate-300'>Last Visited</th>
           </tr>
         </thead>
         <tbody className='[&>*:nth-child(even)]:bg-green-100/40 rounded-lg'>
-          {patients.map( (patient,index) => <tr key={ index }>
-            <td className='py-3 px-2 text-slate-900 border-t border-r border-slate-300'>{ patient.name }</td>
-            <td className='py-3 px-2 border-t border-r border-slate-300'>{ patient.age }</td>
-            <td className='py-3 px-2 border-t border-slate-300'>{ patient.last_visited }</td>
+          {patients.map( (patient,index) => <tr key={ index } className="hover:bg-green-200 cursor-pointer" data-id={patient.id} onClick={gotoVisits}>
+            <td className='py-3 px-2 text-slate-900 border-t border-r border-slate-300'>{ patient.firstname }</td>
+            <td className='py-3 px-2 border-t border-r border-slate-300'>{ patient.lastname }</td>
+            <td className='py-3 px-2 border-t border-slate-300'>{ patient.age }</td>
           </tr>
           )}
         </tbody>

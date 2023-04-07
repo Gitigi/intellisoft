@@ -8,6 +8,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
+import math
 
 import enum
 from sqlalchemy import Enum
@@ -32,6 +33,12 @@ class Patient(Base):
     visits: Mapped[List["Visit"]] = relationship(
         back_populates="patient", cascade="all, delete-orphan"
     )
+
+    @hybrid_property
+    def age(self):
+        age = datetime.now() - self.dob
+        return math.ceil(age.days / 365)
+    
     def __repr__(self) -> str:
         return f"User(id={self.id!r}, name={self.firstname!r}, fullname={self.lastname!r})"
 
@@ -59,6 +66,15 @@ class Visit(Base):
     @mbi.expression
     def mbi(cls):
         return cls.width / ((cls.height / 100) * (cls.height / 100))
+    
+    @hybrid_property
+    def mbi_status(self):
+        if self.mbi < 18.5:
+            return 'Underweight'
+        elif self.mbi < 25:
+            return 'Normal'
+        else:
+            return 'Overweight'
 
     def __repr__(self) -> str:
         return f"Address(id={self.id!r}, email_address={self.visit_date!r}, patient_id={self.patient_id!r})"

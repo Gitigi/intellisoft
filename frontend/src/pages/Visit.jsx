@@ -1,17 +1,45 @@
 import { useMemo } from "react"
 import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom"
+import { useMutation, useQueryClient } from "react-query";
+
+async function addVisit(data) {
+  const res = await fetch(`${import.meta.env.VITE_API}/visits`, {
+    method: 'POST',
+    mode: "cors",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  const visit = await res.json()
+  return visit
+}
 
 export default function Visit() {
+  const { patientId } = useParams()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { register, handleSubmit, watch, formState: {errors, isSubmitted}, reset } = useForm();
-  const onSubmit = data => console.log(data);
-
+  
   const mbi = useMemo(()=>{
     let height = (parseFloat(watch("height")) || 0) / 100;
     let width = parseFloat(watch("width")) || 0
     return width / (height * height)  || 0
   }, [watch("height"), watch("width")])
 
-  console.log(errors)
+  const mutation = useMutation(addVisit, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('visits')
+      navigate('/visits')
+    },
+  })
+
+  const onSubmit = data => {
+    data.patient_id = patientId
+    mutation.mutate(data)
+  };
 
   return <div className="flex justify-center mt-6">
     <form
@@ -23,9 +51,9 @@ export default function Visit() {
         <label>Date</label>
         <div className="col-span-2">
           <input
-            className="border rounded-lg focus-within:none focus-within:outline-none p-2"
+            className="w-full border rounded-lg focus-within:none focus-within:outline-none p-2"
             type="date"
-            {...register("date", {required: true})}
+            {...register("visit_date", {required: true})}
             />
           { isSubmitted && errors.date ? <p className="text-red-800 font-medium">{errors.date.type}</p> : <p>&nbsp;</p> }
         </div>
@@ -35,7 +63,7 @@ export default function Visit() {
           <input
             className="col-span-2 border rounded-lg focus-within:none focus-within:outline-none p-2"
             type="text"
-            {...register("height", {required: true, pattern: /\d+(\.\d+)?/})}
+            {...register("height", {required: true, pattern: /\d+(\.\d+)?/, min: 0})}
             />
           { isSubmitted && errors.height ? <p className="text-red-800 font-medium">{errors.height.type}</p> : <p>&nbsp;</p> }
         </div>
@@ -45,7 +73,7 @@ export default function Visit() {
           <input
             className="col-span-2 border rounded-lg focus-within:none focus-within:outline-none p-2"
             type="text"
-            {...register("width", {required: true, pattern: /\d+(\.\d+)?/})}
+            {...register("width", {required: true, pattern: /\d+(\.\d+)?/, min: 0})}
             />
           { isSubmitted && errors.width ? <p className="text-red-800 font-medium">{errors.width.type}</p> : <p>&nbsp;</p> }
         </div>
@@ -94,11 +122,11 @@ function SectionA({ register, errors, isSubmitted }) {
     <p className="font-semibold text-gray-600">Have you been on a diet to loose weight?</p>
     <ul className="ml-6">
       <li className="space-x-4">
-        <input type="radio" value="yes" className="border" {...register("diet", {required: true})} />
+        <input type="radio" value={true} className="border" {...register("diet", {required: true})} />
         <label>Yes</label>
       </li>
       <li className="space-x-4">
-        <input type="radio" value="no" className="border" {...register("diet", {required: true})} />
+        <input type="radio" value={false} className="border" {...register("diet", {required: true})} />
         <label>No</label>
       </li>
     </ul>
@@ -135,11 +163,11 @@ function SectionB({register, errors, isSubmitted}) {
      <p className="font-semibold text-gray-600">Are you currentyly taking any drugs?</p>
      <ul className="ml-6">
        <li className="space-x-4">
-         <input type="radio" value="yes" className="border" {...register("drugs", {required: true})} />
+         <input type="radio" value={true} className="border" {...register("drugs", {required: true})} />
          <label>Yes</label>
        </li>
        <li className="space-x-4">
-         <input type="radio" value="no" className="border" {...register("drugs", {required: true})} />
+         <input type="radio" value={false} className="border" {...register("drugs", {required: true})} />
          <label>No</label>
        </li>
      </ul>

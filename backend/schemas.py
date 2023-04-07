@@ -10,6 +10,7 @@ class PatientBase(BaseModel):
 
 class Patient(PatientBase):
     id: str
+    age: int
 
     class Config:
         orm_mode = True
@@ -29,13 +30,15 @@ class VisitBase(BaseModel):
     height: float
     width: float
     health: HealthStatus
-    diet: bool
-    drugs: bool
+    diet: bool | None
+    drugs: bool | None
     visit_date: datetime.date
 
 class Visit(VisitBase):
     id: str
     mbi: float
+    mbi_status: str
+    patient: Patient
 
     class Config:
         orm_mode = True

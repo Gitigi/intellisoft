@@ -1,8 +1,36 @@
 import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "react-query"
+import { useNavigate } from 'react-router-dom';
+
+async function registerPatient(data) {
+  const res = await fetch(`${import.meta.env.VITE_API}/patients`, {
+    method: 'POST',
+    mode: "cors",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  const patient = await res.json()
+  return patient
+}
 
 export default function Register() {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate();
   const { register, handleSubmit, formState: {errors, isSubmitted}, reset } = useForm();
-  const onSubmit = data => console.log(data);
+
+  const mutation = useMutation(registerPatient, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('patients')
+      navigate(`/patients/${data.id}/visits/new`)
+    },
+  })
+
+  const onSubmit = data => {
+    mutation.mutate(data)
+  };
 
   return <div className="flex justify-center mt-6">
     <form className="mx:2 lg:mx-auto lg:w-1/3 shadow-[0_5px_15px_0_hsla(0,0%,0%,0.15)] p-6 rounded-lg"

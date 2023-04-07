@@ -26,3 +26,10 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - 5432:5432
+  
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+    ports:
+      - 3001:80
