@@ -17,19 +17,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/patients", response_model=list[schemas.Patient])
+@app.get("/api/patients", response_model=list[schemas.Patient])
 def patients(db: Session = Depends(get_db)):
     return db.query(models.Patient).all()
 
-@app.get("/patients/{id}", response_model=schemas.Patient)
+@app.get("/api/patients/{id}", response_model=schemas.Patient)
 def patients(id:int, db: Session = Depends(get_db)):
     return db.query(models.Patient).where(models.Patient.id == id).first()
 
-@app.get("/patients/{id}/visits", response_model=list[schemas.Visit])
+@app.get("/api/patients/{id}/visits", response_model=list[schemas.Visit])
 def patients(id: int, db: Session = Depends(get_db)):
     return db.query(models.Visit).where(models.Visit.patient_id == id).all()
 
-@app.post("/patients", response_model=schemas.Patient)
+@app.post("/api/patients", response_model=schemas.Patient)
 def patients(patient: schemas.PatientCreate, db: Session = Depends(get_db)):
     db_patient = models.Patient(
         firstname=patient.firstname,
@@ -42,31 +42,31 @@ def patients(patient: schemas.PatientCreate, db: Session = Depends(get_db)):
     db.refresh(db_patient)
     return db_patient
 
-@app.put("/patients/{id}", response_model=schemas.Patient)
+@app.put("/api/patients/{id}", response_model=schemas.Patient)
 def patients(id:int, patient: schemas.PatientUpdate, db: Session = Depends(get_db)):
     update_data = patient.dict(exclude_unset=True)
     r = db.query(models.Patient).where(models.Patient.id == id).update(update_data)
     db.commit()
     return db.query(models.Patient).where(models.Patient.id == id).first()
 
-@app.delete("/patients/{id}")
+@app.delete("/api/patients/{id}")
 def patient(id: int, db: Session = Depends(get_db)):
     db.query(models.Patient).where(models.Patient.id == id).delete()
     db.commit()
     return {"success": True}
 
-@app.get("/visits", response_model=list[schemas.Visit])
+@app.get("/api/visits", response_model=list[schemas.Visit])
 def patients(date: str | None = None, db: Session = Depends(get_db)):
     query = db.query(models.Visit)
     if date:
         query = query.where(models.Visit.visit_date == date)
     return query.order_by(models.Visit.visit_date.desc()).all()
 
-@app.get("/visits/{id}", response_model=schemas.Visit)
+@app.get("/api/visits/{id}", response_model=schemas.Visit)
 def patients(id: int, db: Session = Depends(get_db)):
     return db.query(models.Visit).where(models.Visit.id == id).first()
 
-@app.post("/visits", response_model=schemas.Visit)
+@app.post("/api/visits", response_model=schemas.Visit)
 def patients(visit: schemas.VisitCreate, db: Session = Depends(get_db)):
     db_visit = models.Visit(
         patient_id=visit.patient_id,
@@ -83,14 +83,14 @@ def patients(visit: schemas.VisitCreate, db: Session = Depends(get_db)):
     db.refresh(db_visit)
     return db_visit
     
-@app.put("/visits/{id}", response_model=schemas.Visit)
+@app.put("/api/visits/{id}", response_model=schemas.Visit)
 def visit(id:int, visit: schemas.VisitUpdate, db: Session = Depends(get_db)):
     update_data = visit.dict(exclude_unset=True)
     r = db.query(models.Visit).where(models.Visit.id == id).update(update_data)
     db.commit()
     return db.query(models.Visit).where(models.Visit.id == id).first()
 
-@app.delete("/visits/{id}")
+@app.delete("/api/visits/{id}")
 def visit(id: int, db: Session = Depends(get_db)):
     db.query(models.Visit).where(models.Visit.id == id).delete()
     db.commit()
