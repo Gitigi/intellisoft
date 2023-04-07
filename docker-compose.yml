@@ -1,0 +1,28 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - /usr/src/app/node_modules
+      - ./frontend:/usr/src/app
+    ports:
+      - 5173:5173
+  backend:
+    build:
+      context: ./backend
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/intellisoft
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=intellisoft
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
