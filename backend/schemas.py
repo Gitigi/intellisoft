@@ -33,6 +33,7 @@ class VisitBase(BaseModel):
     diet: bool | None
     drugs: bool | None
     visit_date: datetime.date
+    comments: str | None
 
 class Visit(VisitBase):
     id: str
@@ -55,3 +56,4 @@ class VisitUpdate(BaseModel):
     diet: bool | None
     drugs: bool | None
     visit_date: datetime.date | None
+    comments: str | None

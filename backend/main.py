@@ -75,7 +75,8 @@ def patients(visit: schemas.VisitCreate, db: Session = Depends(get_db)):
         width=visit.width,
         health=visit.health,
         diet=visit.diet,
-        drugs=visit.drugs
+        drugs=visit.drugs,
+        comments=visit.comments
     )
     db.add(db_visit)
     db.commit()

@@ -1,7 +1,7 @@
 from typing import List
 from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
-from sqlalchemy import String
+from sqlalchemy import String, Text
 from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -56,6 +56,7 @@ class Visit(Base):
     health: Mapped[HealthStatus] = mapped_column(Enum(HealthStatus))
     diet: Mapped[bool] = mapped_column(default=False)
     drugs: Mapped[bool] = mapped_column(default=False)
+    comments: Mapped[str] = mapped_column(Text, default='', nullable=True)
     patient_id: Mapped[int] = mapped_column(ForeignKey("patient.id"))
     patient: Mapped["Patient"] = relationship(back_populates="visits")
 
