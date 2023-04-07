@@ -1,6 +1,13 @@
 # intellisoft
 
 
-## Run frontend 
-  - cd frontend
-  - npm run dev
+# Run application
+
+- Start application
+  ```bash
+    docker compose up
+  ```
+- Run db migrations
+  ```bash
+    docker compose exec backend sh -c "alembic upgrade head"
+  ```
