@@ -14,7 +14,7 @@ async function getPatient(id) {
 export default function PatientVisits() {
   const { patientId } = useParams()
   const navigate = useNavigate()
-  const query = useQuery(['visits', patientId], () => getVisits(patientId))
+  const query = useQuery(['patient_visits', patientId], () => getVisits(patientId))
   const patient_query = useQuery(['patients', patientId], () => getPatient(patientId))
   const visits = query?.data || []
   const patient = patient_query?.data

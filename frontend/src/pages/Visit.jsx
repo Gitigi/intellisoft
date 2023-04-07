@@ -32,6 +32,7 @@ export default function Visit() {
   const mutation = useMutation(addVisit, {
     onSuccess: (data) => {
       queryClient.invalidateQueries('visits')
+      queryClient.invalidateQueries('patient_visits')
       navigate('/visits')
     },
   })

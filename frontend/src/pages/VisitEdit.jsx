@@ -32,8 +32,8 @@ export default function Visit() {
   useEffect(()=>{
     if(visit_query?.data) {
       let d = visit_query?.data
-      d.drugs = d.drugs.toString()
-      d.diet = d.diet.toString()
+      d.drugs = d?.drugs?.toString()
+      d.diet = d?.diet?.toString()
       reset(visit_query?.data)
     }
   }, [visit_query?.data])
