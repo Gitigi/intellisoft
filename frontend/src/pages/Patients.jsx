@@ -21,7 +21,7 @@ export default function Patients() {
   return <div className="contents">
     <div className='flex justify-between'>
       <Link to="/register" className='py-2 px-4 border rounded-lg bg-green-100 text-green-800 font-semibold'>Register</Link>
-      <input className='py-2 px-4 border rounded-lg w-1/4' type='text' placeholder='Search' />
+      <input className='hidden py-2 px-4 border rounded-lg w-1/4' type='text' placeholder='Search' />
     </div>
     <div className='border rounded-b-lg'>
       <table className='w-full table-fixed px-2 rounded-lg border-collapse'>

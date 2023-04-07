@@ -23,9 +23,9 @@ export default function Visits() {
   }
 
   return <div className="flex flex-col gap-2">
-    <div className='flex justify-between'>
-      <input className='py-2 px-4 border rounded-lg w-1/4 self-end' type='text' placeholder='Search' />
-      <input defaultValue={searchParams.get('date')} onChange={filterDateChanged} className='py-2 px-4 border rounded-lg w-1/4 self-end' type='date' placeholder='Search' />
+    <div className='flex justify-end'>
+      <input className='hidden py-2 px-4 border rounded-lg w-1/4' type='text' placeholder='Search' />
+      <input defaultValue={searchParams.get('date')} onChange={filterDateChanged} className='py-2 px-4 border rounded-lg w-1/4 self-end ' type='date' placeholder='Search' />
     </div>
     <div className='border rounded-b-lg'>
       <table className='w-full table-fixed px-2 rounded-lg border-collapse'>

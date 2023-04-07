@@ -28,7 +28,7 @@ export default function PatientVisits() {
     <h2 className="bg-green-100/50 p-2 rounded-lg text-center capitalize font-bold mb-2 text-gray-800">{patient?.firstname} {patient?.lastname}</h2>
     <div className='flex justify-between'>
       <Link to={`/patients/${patientId}/visits/new`} className='py-2 px-4 border rounded-lg bg-green-100 text-green-800 font-semibold'>Add Visit</Link>
-      <input className='py-2 px-4 border rounded-lg w-1/4 self-end' type='date' placeholder='Search' />
+      <input className='hidden py-2 px-4 border rounded-lg w-1/4 self-end' type='date' placeholder='Search' />
     </div>
     <div className='border rounded-b-lg'>
       <table className='w-full table-fixed px-2 rounded-lg border-collapse'>
